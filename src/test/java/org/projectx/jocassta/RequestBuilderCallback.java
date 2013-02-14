@@ -1,6 +1,6 @@
 package org.projectx.jocassta;
 
-import org.springframework.test.web.server.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 public interface RequestBuilderCallback {
 

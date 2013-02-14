@@ -1,6 +1,6 @@
 package org.projectx.jocassta;
 
-import static org.springframework.test.web.server.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.util.UUID;
 
@@ -8,8 +8,8 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.test.web.server.ResultActions;
-import org.springframework.test.web.server.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 public class JocasstaQueryControllerTestIT extends JocasstaControllerTestBase {
 

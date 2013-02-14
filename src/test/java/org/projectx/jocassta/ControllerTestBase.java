@@ -1,9 +1,9 @@
 package org.projectx.jocassta;
 
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.server.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -21,11 +21,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.server.MockMvc;
-import org.springframework.test.web.server.ResultActions;
-import org.springframework.test.web.server.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.server.result.MockMvcResultHandlers;
-import org.springframework.test.web.server.setup.MockMvcBuilders;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -43,7 +43,7 @@ public class ControllerTestBase {
 
   @Before
   public void setup() {
-    mockMvc = MockMvcBuilders.webApplicationContextSetup(webApplicationContext).build();
+    mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
   }
 
   protected MockMvc getMvc() {
@@ -113,7 +113,7 @@ public class ControllerTestBase {
     try {
       printAsJson(entity);
       final MockHttpServletRequestBuilder request = post(uri);
-      request.body(toJson(entity).getBytes());
+      request.content(toJson(entity).getBytes());
       request.contentType(MediaType.APPLICATION_JSON);
       final ResultActions action = getMvc().perform(request);
       printResult(action);
@@ -125,7 +125,7 @@ public class ControllerTestBase {
 
   protected void assertBasicOkJson(final ResultActions action) throws Exception {
     action.andExpect(status().isOk());
-    action.andExpect(content().mimeType(MediaType.APPLICATION_JSON));
+    action.andExpect(content().contentType(MediaType.APPLICATION_JSON));
   }
 
 }

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util" xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+  <mvc:annotation-driven />
+
+  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="order" value="1" />
+  </bean>
+
+  <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+    <property name="order" value="2" />
+    <property name="mediaTypes">
+      <map>
+        <entry key="html" value="text/html" />
+        <entry key="json" value="application/json" />
+      </map>
+    </property>
+    <property name="viewResolvers">
+      <list>
+        <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+          <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+          <property name="prefix" value="/WEB-INF/pages/" />
+          <property name="suffix" value=".jsp" />
+        </bean>
+      </list>
+    </property>
+    <property name="defaultViews">
+      <list>
+        <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+      </list>
+    </property>
+  </bean>
+
+  <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+
+  <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+    <property name="messageConverters">
+      <list>
+        <bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+          <property name="objectMapper" ref="objectMapper" />
+        </bean>
+        <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+          <property name="supportedMediaTypes">
+            <list>
+              <bean class="org.springframework.http.MediaType">
+                <constructor-arg index="0" value="text" />
+                <constructor-arg index="1" value="plain" />
+                <constructor-arg index="2" value="UTF-8" />
+              </bean>
+              <bean class="org.springframework.http.MediaType">
+                <constructor-arg index="0" value="*" />
+                <constructor-arg index="1" value="*" />
+                <constructor-arg index="2" value="UTF-8" />
+              </bean>
+            </list>
+          </property>
+        </bean>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="objectMapper" class="org.codehaus.jackson.map.ObjectMapper" />
+  <bean id="jocasstaMetaDataController" class="org.projectx.jocassta.controller.JocasstaMetaDataController" />
+  <bean id="jocasstaQueryExecutor" class="org.projectx.jocassta.qeury.JocasstaQueryExecutor" />
+  <bean id="jocasstaQueryController" class="org.projectx.jocassta.controller.JocasstaQueryController">
+    <constructor-arg ref="jocasstaQueryExecutor" />
+  </bean>
+  <bean id="jocasstaCqlController" class="org.projectx.jocassta.controller.JocasstaCqlController">
+    <constructor-arg ref="jocasstaQueryExecutor" />
+    <constructor-arg value="${org.projectx.cassandra.hosts}" />
+    <constructor-arg value="${org.projectx.cassandra.cluster}" />
+    <constructor-arg value="${org.projectx.cassandra.keyspace}" />
+  </bean>
+</beans>
+
